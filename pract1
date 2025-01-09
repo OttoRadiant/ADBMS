@@ -1,0 +1,40 @@
+Aim: Implementation of Data Partitioning through range and list Partitioning.
+
+create table employee1(emp_no number,emp_name
+varchar(20),branch varchar(20),emp_sal
+number)PARTITION by range(emp_sal)(PARTITION p1
+values LESS than (6000),PARTITION p2 values LESS
+than (9000),PARTITION p3 values LESS than (11999));
+
+insert into employee1 values(1,'mayuri','mumbai',8000);
+insert into employee1 values(2,'manasi','pune',5000);
+insert into employee1 values(3,'belesh','thane',10000);
+insert into employee1 values(4,'aniket','nagpur',4500);
+insert into employee1 values(5,'vikram','agara',2500);
+
+
+select * from employee1 PARTITION(p1);
+select * from employee1 PARTITION(p2);
+select * from employee1 PARTITION(p3);
+
+select sum(emp_sal),emp_no from employee1 group by
+emp_no
+select * from employee1 order by emp_sal;
+select * from employee1 order by emp_sal desc;  
+
+
+create table student1(name varchar(20),age number)PARTITION by range(age)(PARTITION a1 values
+LESS than (20),PARTITION a2 values LESS than (30));
+
+insert into student1 values('mayuri',20);
+insert into student1 values('manasi',15);
+insert into student1 values('belesh',25);
+insert into student1 values('aniket',18);
+insert into student1 values('vikram',29);
+insert into student1 values('yash',12);
+
+select * from student1 PARTITION(a1);
+
+select * from student1 PARTITION(a2);
+
+
