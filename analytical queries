@@ -1,0 +1,94 @@
+select emp_name,branch,emp_sal,rank() over (order by emp_sal)"Rank" from employee1;
+
+select emp_name,branch,emp_sal,dense_rank() over (order by emp_sal)"Rank" from employee1;
+
+select emp_name,emp_no,emp_sal,branch,min(emp_sal)keep(den se_rank first order by emp_sal )over (partition
+by branch)"lowest",max(emp_sal)keep(dense_rank last order by emp_sal )over(partition by emp_no)"highest" from employee1 order by emp_no,emp_sal;
+
+select emp_name,branch,sum(emp_sal) from employee1
+GROUP BY cube(emp_name,branch) ORDER BY emp_name,branch;
+
+select emp_name,branch,sum(emp_sal) from employee1
+GROUP BY rollup(emp_name,branch) ORDER BY emp_name,branch;
+
+create table product (
+prdno varchar(20), prodname varchar(25), rate number, qty_avilable number
+)
+partition by list(prdno) (
+partition pd1 values('p01','p02','p03','p04'),
+partition pd2 values('a01','a02','a03','a04'),
+partition pd3 values('b01','b02','b03','b04'),
+partition pd4 values('c01','c02','c03','c04')
+); create table product (
+prdno varchar(20), prodname varchar(25),
+rate number, qty_avilable number
+)
+partition by list(prdno) (
+partition pd1 values('p01','p02','p03','p04'),
+partition pd2 values('a01','a02','a03','a04'),
+partition pd3 values('b01','b02','b03','b04'),
+partition pd4 values('c01','c02','c03','c04')
+);
+
+
+insert into product values('b01','books',30,40); select * from product partition(pd2);
+select * from product partition(pd3);
+
+
+
+
+create table cricket1(name varchar(20),team varchar(20),run number)
+
+
+insert into cricket1 values('mayuri','IND',120); 
+insert into cricket1 values('manasi','IND',150); 
+insert into cricket1 values('belesh','west indies',200); 
+insert into cricket1 values('aniket','australian',190); 
+insert into cricket1 values('vikram','london',100);
+insert into cricket1 values('yash','australian',250); 
+insert into cricket1 values('rupesh','IND',250);
+insert into cricket1 values('madhura','west indies',300);
+
+select name,team,run,rank() over (order by run)"Rank" from cricket1;
+
+select name,team,run,dense_rank() over (order by run)"DenseRank" from cricket1;
+
+
+SQL> select name,team,run,min(run)keep(dense_rank first order by run)over(partition by team)"Lowest"
+,max(run)keep(dense_rank last order by run)over(partition by team)"highest" from cricket1 order by run,team.
+
+
+create or replace type ptype as object(sizes number,color varchar(20),article varchar(20));
+
+create table product1(prod_id number,prod_name ptype);
+insert into product1 values(1,ptype(10,'red','adx123')); 
+insert into product1 values(2,ptype(30,'orange','rdg456'));
+insert into product1 values(3,ptype(25,'blue','jhg576')); 
+insert into product1 values(4,ptype(40,'pink','ewd481'));
+
+select p.prod_id,p.prod_name.sizes,p.prod_name.color,p.prod_name.article from product1 p;
+
+select p.prod_id,p.prod_name.sizes from product1 p;
+select p.prod_id,p.prod_name.color from product1 p;
+select p.prod_id,p.prod_name.article from product1 p;
+
+
+
+create table student(name varchar(20),age number,year varchar(20),marks number);
+insert into student values('mayuri',21,'fymca',80); 
+insert into student values('manasi',25,'symca',85); 
+insert into student values('madhura',19,'fymca',75); 
+insert into student values('aniket',22,'tymca',90); 
+insert into student values('yash',24,'tymca',55);
+insert into student values('rahul',27,'symca',64);
+
+select name,age,year,marks,min(marks)keep(dense_rank first order by marks)over(partition by year)"first",
+max(marks)keep(dense_rank last order by marks)over(partition by year)"last" from student order by marks,year;
+
+
+
+
+
+
+
+
