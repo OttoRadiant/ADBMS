@@ -1,0 +1,116 @@
+Aim: Implementation of Abstract Datatype.
+
+   
+  
+>>>>> Create an date_type with the attribute day, month and year to store the date details
+
+
+CREATE TABLE DateType (
+    Day INT CHECK (Day >= 1 AND Day <= 31),    -- Day of the month
+    Month INT CHECK (Month >= 1 AND Month <= 12),  -- Month of the year
+    Year INT CHECK (Year >= 0)                   -- Year (Positive integer)
+);
+
+INSERT INTO DateType (Day, Month, Year)
+VALUES (10, 1, 2025);
+
+SELECT * FROM DateType;
+
+SELECT * FROM DateType WHERE Day = 10 AND Month = 1 AND Year = 2025;
+
+UPDATE DateType
+SET Day = 15, Month = 2, Year = 2025
+WHERE Day = 10 AND Month = 1 AND Year = 2025;
+
+DELETE FROM DateType
+WHERE Day = 10 AND Month = 1 AND Year = 2025;
+
+CREATE TYPE DateType AS (
+    Day INT,
+    Month INT,
+    Year INT
+);
+
+CREATE TABLE Events (
+    EventName VARCHAR(255),
+    EventDate DateType
+);
+
+INSERT INTO Events (EventName, EventDate)
+VALUES ('New Year Celebration', (10, 1, 2025));
+
+
+
+
+>>Create abstract datatype of Book_type containing Bookno, Title,
+Author, pub_date, price.
+
+
+CREATE TABLE Book_type (
+    Bookno INT PRIMARY KEY,           -- Unique identifier for the book
+    Title VARCHAR(255),               -- Title of the book
+    Author VARCHAR(255),              -- Author of the book
+    pub_date DATE,                    -- Publication date of the book
+    price DECIMAL(10, 2)              -- Price of the book
+);
+
+INSERT INTO Book_type (Bookno, Title, Author, pub_date, price)
+VALUES (101, 'The Great Gatsby', 'F. Scott Fitzgerald', '1925-04-10', 15.99);
+
+SELECT * FROM Book_type;
+
+SELECT * FROM Book_type WHERE Bookno = 101;
+
+CREATE VIEW BookSummary AS
+SELECT Bookno, Title, Author
+FROM Book_type;
+
+SELECT * FROM BookSummary;
+
+DELIMITER $$
+
+CREATE PROCEDURE AddBook(
+    IN p_Bookno INT,
+    IN p_Title VARCHAR(255),
+    IN p_Author VARCHAR(255),
+    IN p_pub_date DATE,
+    IN p_price DECIMAL(10, 2)
+)
+BEGIN
+    INSERT INTO Book_type (Bookno, Title, Author, pub_date, price)
+    VALUES (p_Bookno, p_Title, p_Author, p_pub_date, p_price);
+END $$
+
+DELIMITER ;
+
+CALL AddBook(102, '1984', 'George Orwell', '1949-06-08', 12.99);
+
+DELIMITER $$
+
+CREATE PROCEDURE UpdateBookPrice(
+    IN p_Bookno INT,
+    IN p_new_price DECIMAL(10, 2)
+)
+BEGIN
+    UPDATE Book_type
+    SET price = p_new_price
+    WHERE Bookno = p_Bookno;
+END $$
+
+DELIMITER ;
+
+CALL UpdateBookPrice(101, 17.99);
+DELIMITER $$
+
+CREATE PROCEDURE DeleteBook(
+    IN p_Bookno INT
+)
+BEGIN
+    DELETE FROM Book_type WHERE Bookno = p_Bookno;
+END $$
+
+DELIMITER ;
+
+CALL DeleteBook(101);
+
+
